@@ -8,15 +8,15 @@ namespace Bookify.Application.Apartments.SearchApartments;
 
 internal sealed class SearchApartmentsQueryHandler : IQueryHandler<SearchApartmentsQuery, IReadOnlyList<ApartmentResponse>>
 {
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
-
     private static readonly int[] ActiveBookingStatuses =
     {
         (int)BookingStatus.Reserved,
         (int)BookingStatus.Confirmed,
         (int)BookingStatus.Completed
     };
-    
+
+    private readonly ISqlConnectionFactory _sqlConnectionFactory;
+
     public SearchApartmentsQueryHandler(ISqlConnectionFactory sqlConnectionFactory)
     {
         _sqlConnectionFactory = sqlConnectionFactory;
@@ -26,9 +26,9 @@ internal sealed class SearchApartmentsQueryHandler : IQueryHandler<SearchApartme
     {
         if (request.StartDate > request.EndDate)
             return new List<ApartmentResponse>();
-        
+
         using var connection = _sqlConnectionFactory.CreateConnection();
-        
+
         const string sql = """
                            SELECT
                                a.id AS Id,
@@ -53,22 +53,22 @@ internal sealed class SearchApartmentsQueryHandler : IQueryHandler<SearchApartme
                                    b.status = ANY(@ActiveBookingStatuses)
                            )
                            """;
-        
-        var apartments = await connection.QueryAsync<ApartmentResponse, AddressResponse, ApartmentResponse>(
-                sql,
-                (apartment, address) =>
-                {
-                    apartment.Address = address;
 
-                    return apartment;
-                },
-                new
-                {
-                    request.StartDate,
-                    request.EndDate,
-                    ActiveBookingStatuses
-                },
-                splitOn: "Country");
+        var apartments = await connection.QueryAsync<ApartmentResponse, AddressResponse, ApartmentResponse>(
+            sql,
+            (apartment, address) =>
+            {
+                apartment.Address = address;
+
+                return apartment;
+            },
+            new
+            {
+                request.StartDate,
+                request.EndDate,
+                ActiveBookingStatuses
+            },
+            splitOn: "Country");
 
         return apartments.ToList();
     }

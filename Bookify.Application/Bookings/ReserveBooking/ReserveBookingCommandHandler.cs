@@ -9,12 +9,12 @@ namespace Bookify.Application.Bookings.ReserveBooking;
 
 internal sealed class ReserveBookingCommandHandler : ICommandHandler<ReserveBookingCommand, Guid>
 {
-    private readonly IUserRepository _userRepository;
     private readonly IApartmentRepository _apartmentRepository;
     private readonly IBookingRepository _bookingRepository;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly PricingService _pricingService;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly PricingService _pricingService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _userRepository;
 
     public ReserveBookingCommandHandler(
         PricingService pricingService,
@@ -48,11 +48,11 @@ internal sealed class ReserveBookingCommandHandler : ICommandHandler<ReserveBook
             return Result.Failure<Guid>(BookingErrors.Overlap);
 
         var booking = Booking.Reserve(
-            apartment: apartment,
-            userId: user.Id,
-            duration: duration,
-            utcNow: _dateTimeProvider.UtcNow,
-            pricingService: _pricingService);
+            apartment,
+            user.Id,
+            duration,
+            _dateTimeProvider.UtcNow,
+            _pricingService);
 
         _bookingRepository.Add(booking);
 

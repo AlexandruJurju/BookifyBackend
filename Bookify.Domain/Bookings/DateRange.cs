@@ -2,6 +2,10 @@
 
 public record DateRange
 {
+    private DateRange()
+    {
+    }
+
     public DateOnly Start { get; init; }
 
     public DateOnly End { get; init; }
@@ -20,9 +24,5 @@ public record DateRange
             Start = start,
             End = end
         };
-    }
-    
-    private DateRange()
-    {
     }
 }

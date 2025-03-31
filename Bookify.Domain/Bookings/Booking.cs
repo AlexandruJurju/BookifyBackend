@@ -31,9 +31,13 @@ public sealed class Booking : Entity
         CreatedOnUtc = createdOnUtc;
     }
 
+    private Booking()
+    {
+    }
+
     public Guid ApartmentId { get; private set; }
     public Guid UserId { get; private set; }
-    public DateRange Duration { get; private set; }
+    public DateRange Duration { get; }
     public Money PriceForPeriod { get; private set; }
     public Money CleaningFee { get; private set; }
     public Money AmenitiesUpCharge { get; private set; }
@@ -145,9 +149,5 @@ public sealed class Booking : Entity
         RaiseDomainEvent(new BookingCancelledDomainEvent(Id));
 
         return Result.Success();
-    }
-
-    private Booking()
-    {
     }
 }

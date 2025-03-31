@@ -38,7 +38,7 @@ internal sealed class GetBookingQueryHandler : IQueryHandler<GetBookingQuery, Bo
                            FROM bookings
                            WHERE id = @BookingId
                            """;
-        
+
         var booking = await connection.QueryFirstOrDefaultAsync<BookingResponse>
         (sql,
             new

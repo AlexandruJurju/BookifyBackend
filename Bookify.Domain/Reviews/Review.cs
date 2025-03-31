@@ -24,6 +24,10 @@ public sealed class Review : Entity
         CreatedOnUtc = createdOnUtc;
     }
 
+    private Review()
+    {
+    }
+
     public Guid ApartmentId { get; private set; }
 
     public Guid BookingId { get; private set; }
@@ -59,10 +63,5 @@ public sealed class Review : Entity
         review.RaiseDomainEvent(new ReviewCreatedDomainEvent(review.Id));
 
         return review;
-    }
-
-    private Review()
-    {
-        
     }
 }
