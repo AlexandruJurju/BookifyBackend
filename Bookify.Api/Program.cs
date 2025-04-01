@@ -1,3 +1,4 @@
+using Bookify.Api.Extensions;
 using Bookify.Application;
 using Bookify.Infrastructure;
 using Scalar.AspNetCore;
@@ -17,6 +18,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();

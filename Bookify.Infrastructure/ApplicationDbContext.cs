@@ -22,7 +22,7 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork
         base.OnModelCreating(modelBuilder);
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -34,7 +34,7 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            throw new ConcurrencyException("Concurrency error", ex);
+            throw new ConcurrencyException("Concurrency exception occurred.", ex);
         }
     }
 
