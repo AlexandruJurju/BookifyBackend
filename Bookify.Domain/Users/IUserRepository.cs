@@ -4,5 +4,5 @@ public interface IUserRepository
 {
     Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
-    void AddUser(User user);
+    void Add(User User);
 }
