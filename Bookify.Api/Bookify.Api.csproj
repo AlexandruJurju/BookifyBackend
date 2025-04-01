@@ -4,14 +4,23 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
+        <PackageReference Include="Scalar.AspNetCore" Version="2.1.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Controllers\"/>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Bookify.Application\Bookify.Application.csproj" />
+      <ProjectReference Include="..\Bookify.Infrastructure\Bookify.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
