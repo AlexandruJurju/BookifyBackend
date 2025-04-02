@@ -18,12 +18,15 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
-    app.ApplyMigrations();
+    // app.ApplyMigrations();
+    // app.SeedData();
 }
 
 app.UseHttpsRedirection();
 
 // app.UseAuthorization();
+
+app.UseCustomExceptionHandler();
 
 app.MapControllers();
 
