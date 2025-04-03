@@ -17,10 +17,6 @@ public sealed class User : Entity
     }
 
 
-    private User()
-    {
-    }
-
     public FirstName FirstName { get; private set; }
 
     public LastName LastName { get; private set; }
@@ -29,6 +25,10 @@ public sealed class User : Entity
 
     public string IdentityId { get; private set; } = string.Empty;
 
+    private readonly List<Role> _roles = new();
+
+    public IReadOnlyCollection<Role> Roles => _roles.ToList();
+    
     public static User Create(
         FirstName firstName,
         LastName lastName,
@@ -37,6 +37,8 @@ public sealed class User : Entity
         var user = new User(Guid.NewGuid(), firstName, lastName, email);
 
         user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
+        
+        user._roles.Add(Role.Registered);
 
         return user;
     }
@@ -44,5 +46,9 @@ public sealed class User : Entity
     public void SetIdentityId(string identityId)
     {
         IdentityId = identityId;
+    }
+
+    private User()
+    {
     }
 }
