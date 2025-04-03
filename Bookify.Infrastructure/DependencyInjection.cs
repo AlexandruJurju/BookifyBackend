@@ -44,8 +44,10 @@ public static class DependencyInjection
         AddAuthentication(services, configuration);
 
         AddAuthorization(services);
-        
+
         AddCaching(services, configuration);
+
+        AddHealthChecks(services, configuration);
 
         return services;
     }
@@ -56,10 +58,7 @@ public static class DependencyInjection
             configuration.GetConnectionString("Database") ??
             throw new ArgumentNullException(nameof(configuration));
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
-        });
+        services.AddDbContext<ApplicationDbContext>(options => { options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention(); });
 
         services.AddScoped<IUserRepository, UserRepository>();
 
@@ -121,7 +120,7 @@ public static class DependencyInjection
 
         services.AddTransient<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
     }
-    
+
     private static void AddCaching(IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("Cache") ??
@@ -130,5 +129,13 @@ public static class DependencyInjection
         services.AddStackExchangeRedisCache(options => options.Configuration = connectionString);
 
         services.AddSingleton<ICacheService, CacheService>();
+    }
+
+    private static void AddHealthChecks(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddNpgSql(configuration.GetConnectionString("Database")!)
+            .AddRedis(configuration.GetConnectionString("Cache")!)
+            .AddUrlGroup(new Uri(configuration["KeyCloak:BaseUrl"]!), HttpMethod.Get, "keycloak");
     }
 }
